@@ -3,7 +3,9 @@ export interface EscalationData {
     version: string;
     category: string;
     subCategory: string;
-    linkedJiraItems: Array<string>;
+    jiraLink: string;
+    caseLink: string;
+    issuesCount: number;
 }
 
 export interface LinkedSFTicket {
@@ -12,7 +14,7 @@ export interface LinkedSFTicket {
 }
 
 export interface LinkedJiraItem {
-    JiraItem: string;
+    case_number: number;
 }
 
 export interface ListItem {
