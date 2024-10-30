@@ -10,23 +10,28 @@ import { SetFilterModule } from "@ag-grid-enterprise/set-filter";
 import '@ag-grid-community/styles/ag-grid.css';
 import '@ag-grid-community/styles/ag-theme-quartz.css';
 
-import {EscalationData} from "./interfaces.ts";
-import rows from '../mock/rows.json'
-import {filters} from "../mock/lists.ts";
+import {EscalationData, ListItem} from "./interfaces.ts";
 
 ModuleRegistry.registerModules([ClientSideRowModelModule, RowGroupingModule, MultiFilterModule, SetFilterModule]);
 
-export const Table = () => {
+interface TableProps {
+    filters: {
+        LLM_Category: string[];
+        LLM_SubCategory: string[];
+        Version: string[];
+    }
+}
+
+export const Table = ({filters}: TableProps) => {
     const [gridApi, setGridApi] = useState<any>();
     const [rowData, setRowData] = useState<EscalationData[]>();
-    const [columnDefs, setColumnDefs] = useState<ColDef[]>([
+    const [columnDefs] = useState<ColDef[]>([
         {
             field: 'summary',
             headerName: 'Summary',
             rowGroup: true,
             hide: true
         },
-        // {field: 'year', rowGroup: true, hide: true},
         {
             field: 'version',
             headerName: 'Version',
@@ -35,27 +40,27 @@ export const Table = () => {
             },
             filter: true,
             filterParams: {
-                values: (params: { success: (arg0: string[]) => void; }) => {
-                    // simulating async delay
-                    setTimeout(() => params.success(filters.Version), 500);
-                }
-            }
+                values: filters.Version,
+                debounceMs: 1000
+            },
         },
         {
             field: 'category',
             headerName: 'Category',
             filter: true,
             filterParams: {
-                values: (params: { success: (arg0: string[]) => void; }) => {
-                    // simulating async delay
-                    setTimeout(() => params.success(filters.LLM_Category), 500);
-                }
+                values: filters.LLM_Category,
+                debounceMs: 1000
             }
         },
         {
             field: 'subCategory',
             headerName: 'Sub Category',
-            filter: true
+            filter: true,
+            filterParams: {
+                values: filters.LLM_SubCategory,
+                debounceMs: 1000
+            }
         },
 
     ]);
@@ -66,32 +71,36 @@ export const Table = () => {
         };
     }, []);
 
-    const fetchRowData = useCallback(() => {
-        fetch('https://www.ag-grid.com/example-assets/olympic-winners.json')
+    const fetchRowData = useCallback((count?: number,  values?: string) => {
+        const queryParams = new URLSearchParams({
+            ...count && {count: `${count}`},
+            ...values && {values}
+        }).toString();
+
+        fetch((`http://localhost:3000/filtered-list?${queryParams}`))
             .then((resp) => resp.json())
-            .then((data) => {
-                setRowData(data);
+            .then((data: ListItem[]) => {
+                setRowData(data.reduce<EscalationData[]>((acc, row) => {
+                    const items =  row.LinkedSFTickets.map((item) => ({
+                        summary: row.LLM_Description,
+                        version: item.version,
+                        category: row.LLM_Category,
+                        subCategory: row.LLM_SubCategory,
+                        linkedJiraItems: row.LinkedJiraItems.map((item) => item.JiraItem)
+                    }))
+                    return [...acc, ...items ]
+                }, []));
             });
-    }, [])
+    }, [gridApi])
 
     const onGridReady = useCallback((params: GridReadyEvent) => {
-
-
-        setRowData(rows.reduce<EscalationData[]>((acc, row) => {
-            const items =  row.LinkedSFTickets.map((item) => ({
-                summary: row.LLM_Description,
-                version: item.Version,
-                category: row.LLM_Category,
-                subCategory: row.LLM_SubCategory,
-                linkedJiraItems: row.LinkedJiraItems.map((item) => item.JiraItem)
-            }))
-            return [...acc, ...items ]
-        }, []))
+        fetchRowData(10);
         setGridApi(params.api);
     }, []);
 
     const onFilterChanged = () => {
-        gridApi.getFilterModel();
+        const values = Object.values(gridApi.getFilterModel()).map((item: any) => item.values).join(',');
+        fetchRowData(undefined, values);
     }
 
 

@@ -1,16 +1,3 @@
-export interface IOlympicData {
-    athlete: string,
-    age: number,
-    country: string,
-    year: number,
-    date: string,
-    sport: string,
-    gold: number,
-    silver: number,
-    bronze: number,
-    total: number
-}
-
 export interface EscalationData {
     summary: string;
     version: string;
@@ -20,8 +7,8 @@ export interface EscalationData {
 }
 
 export interface LinkedSFTicket {
-    CaseNumber: number;
-    Version: string;
+    case_number: number;
+    version: string;
 }
 
 export interface LinkedJiraItem {
