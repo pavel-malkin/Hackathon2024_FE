@@ -30,7 +30,7 @@ function App() {
           <Box sx={{
               margin: 1
           }}>
-              <Paper elevation={4} sx={{borderRadius: '12px'}}>
+              <Paper elevation={12}>
                   {!loading && <Table filters={filters}/>}
               </Paper>
           </Box>
