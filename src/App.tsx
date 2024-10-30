@@ -1,7 +1,8 @@
 import {useEffect, useState} from "react";
+import {Box, Paper} from "@mui/material";
 import './App.css'
 import {Table} from "./components/Table.tsx";
-import {Box, Paper} from "@mui/material";
+import logo from './assets/logo.png';
 
 function App() {
     const [loading, setLoading] = useState<boolean>(true);
@@ -22,14 +23,18 @@ function App() {
 
 
   return (
-      <Box sx={{
-          // width: '100vw',
-          // height: '100vh',
-          margin: 1}}>
-          <Paper>
-              {!loading && <Table filters={filters}/>}
-          </Paper>
-      </Box>
+      <>
+          <div style={{margin: 20}}>
+              <img src={logo} alt="Logo" style={{width: '400px', height: 'auto', marginTop: 0}}/>
+          </div>
+          <Box sx={{
+              margin: 1
+          }}>
+              <Paper elevation={4} sx={{borderRadius: '12px'}}>
+                  {!loading && <Table filters={filters}/>}
+              </Paper>
+          </Box>
+      </>
   )
 }
 
