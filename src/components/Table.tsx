@@ -96,22 +96,22 @@ export const Table = ({filters}: TableProps) => {
         fetch((`http://localhost:3000/filtered-list?${queryParams}`))
             .then((resp) => resp.json())
             .then((data: ListItem[]) => {
-                setRowData(data.reduce<EscalationData[]>((acc, row) => {
-                    const sfItems =  row.LinkedSFTickets.map((item) => ({
+                setRowData(data.reduce<EscalationData[]>((acc, row, currentIndex) => {
+                    const sfItems =  row.LinkedSFTickets.map((item, index) => ({
                         summary: `(${row.Calculated} issues) ${row.LLM_Description}`,
                         version: item.version,
-                        category: row.LLM_Category,
-                        subCategory: row.LLM_SubCategory,
+                        category: index && currentIndex? data[index - 1].LLM_Category : row.LLM_Category,
+                        subCategory: index && currentIndex? data[index - 1].LLM_SubCategory : row.LLM_SubCategory,
                         jiraLink: ``,
                         caseLink: `${item.case_number}`,
                         issuesCount: row.Calculated,
                     }))
 
-                    const jiraItems =  row.LinkedJiraItems.map((item) => ({
+                    const jiraItems =  row.LinkedJiraItems.map((item, index) => ({
                         summary: `(${row.Calculated} issues) ${row.LLM_Description}`,
                         version: "",
-                        category: row.LLM_Category,
-                        subCategory: row.LLM_SubCategory,
+                        category: index && currentIndex? data[index - 1].LLM_Category : row.LLM_Category,
+                        subCategory: index && currentIndex? data[index - 1].LLM_SubCategory : row.LLM_SubCategory,
                         jiraLink: `${item.case_number}`,
                         caseLink: ``,
                         issuesCount: row.Calculated,
@@ -123,7 +123,7 @@ export const Table = ({filters}: TableProps) => {
     }, [gridApi])
 
     const onGridReady = useCallback((params: GridReadyEvent) => {
-        fetchRowData(10);
+        fetchRowData(100);
         setGridApi(params.api);
     }, []);
 
