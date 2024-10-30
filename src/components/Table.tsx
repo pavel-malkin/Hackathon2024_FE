@@ -8,7 +8,7 @@ import { MultiFilterModule } from "@ag-grid-enterprise/multi-filter";
 import { SetFilterModule } from "@ag-grid-enterprise/set-filter";
 
 import '@ag-grid-community/styles/ag-grid.css';
-import '@ag-grid-community/styles/ag-theme-quartz.css';
+import '@ag-grid-community/styles/ag-theme-material.css';
 
 import {EscalationData, ListItem} from "./interfaces.ts";
 
@@ -106,8 +106,8 @@ export const Table = ({filters}: TableProps) => {
 
     return (
         <Box
-            className={"ag-theme-quartz"}
-            sx={{width: 'calc(100vw - 40px)', height: 'calc(100vh - 20px)'}}
+            className={"ag-theme-material"}
+            sx={{width: 'calc(100vw - 40px)', height: 'calc(100vh - 200px)'}}
         >
             <AgGridReact
                 rowData={rowData}
