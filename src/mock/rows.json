@@ -1,0 +1,40 @@
+[
+  {
+    "LLM_Category": "Zerto Virtual Manager",
+    "LLM_SubCategory": "ZVM Site Setting",
+    "LLM_Description": "Replace peer hostnames with IP addresses",
+    "Calculated": 1,
+    "LinkedSFTickets": [
+      {
+        "CaseNumber": 255705,
+        "Version": "10.0 Update 2 Patch 1"
+      }
+    ],
+    "LinkedJiraItems": [
+      {
+        "JiraItem": "None"
+      }
+    ]
+  },
+  {
+    "LLM_Category": "How to",
+    "LLM_SubCategory": "Configuration",
+    "LLM_Description": "Could I configure the time zone at Zerto VZM?",
+    "Calculated": 1,
+    "LinkedSFTickets": [
+      {
+        "CaseNumber": 255717,
+        "Version": "10.0 Update 4 Patch 1"
+      },
+      {
+        "CaseNumber": 255705,
+        "Version": "10.0 Update 2 Patch 1"
+      }
+    ],
+    "LinkedJiraItems": [
+      {
+        "JiraItem": "None"
+      }
+    ]
+  }
+]
